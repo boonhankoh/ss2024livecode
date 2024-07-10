@@ -1,3 +1,5 @@
+import random
+
 from otree.api import (
     BaseConstants,
     BaseGroup,
@@ -19,6 +21,7 @@ class C(BaseConstants):
     NUM_ROUNDS = 2
     ENDOWMENT = 20
     COST_PER_TICKET = 1
+    PRIZE = 20
 
 
 class Subsession(BaseSubsession):
@@ -34,6 +37,23 @@ class Group(BaseGroup):
     def setup(self):
         for player in self.get_players():
             player.setup()
+
+    def determine_outcomes(self):
+        tickets = []
+        for player in self.get_players():
+            for i in range(player.tickets_purchased):
+                tickets.append(player.id_in_group)
+        if not tickets:
+            for player in self.get_players():
+                tickets.append(player.id_in_group)
+        print(tickets)
+        winning_id = random.choice(tickets)
+        for player in self.get_players():
+            player.is_winner = (player.id_in_group == winning_id)
+            player.earnings = player.endowment - player.cost_per_ticket*player.tickets_purchased + player.is_winner*C.PRIZE
+
+            if self.subsession.is_paid:
+                player.payoff = player.earnings
 
 
 class Player(BasePlayer):
@@ -75,7 +95,12 @@ class Decision(Page):
 
 
 class WaitForDecisions(WaitPage):
-    pass
+    wait_for_all_groups = True
+
+    @staticmethod
+    def after_all_players_arrive(subsession):
+        for group in subsession.get_groups():
+            group.determine_outcomes()
 
 
 class Results(Page):
