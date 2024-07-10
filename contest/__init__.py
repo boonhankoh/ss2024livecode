@@ -18,7 +18,7 @@ App for Tullock contest with chosen effort
 class C(BaseConstants):
     NAME_IN_URL = "contest"
     PLAYERS_PER_GROUP = 2  # oTree does fixed grouping by default
-    NUM_ROUNDS = 5
+    NUM_ROUNDS = 2
     ENDOWMENT = 20
     COST_PER_TICKET = 1
     PRIZE = 20
