@@ -20,7 +20,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = 2  # oTree does fixed grouping by default
     NUM_ROUNDS = 2
     ENDOWMENT = 20
-    COST_PER_TICKET = 1
+    COST_PER_TICKET = {1: 1, 2: 2}  # number of elements should match players_in_group
     PRIZE = 20
 
 
@@ -66,7 +66,7 @@ class Player(BasePlayer):
 
     def setup(self):
         self.endowment = C.ENDOWMENT
-        self.cost_per_ticket = C.COST_PER_TICKET
+        self.cost_per_ticket = C.COST_PER_TICKET[self.id_in_group]
 
 
 # FUNCTIONS
