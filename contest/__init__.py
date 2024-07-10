@@ -17,8 +17,8 @@ App for Tullock contest with chosen effort
 
 class C(BaseConstants):
     NAME_IN_URL = "contest"
-    PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 2
+    PLAYERS_PER_GROUP = 2  # oTree does fixed grouping by default
+    NUM_ROUNDS = 5
     ENDOWMENT = 20
     COST_PER_TICKET = 1
     PRIZE = 20
@@ -29,6 +29,7 @@ class Subsession(BaseSubsession):
 
     def setup(self):
         self.is_paid = (self.round_number == 1)
+        self.group_randomly()
         for group in self.get_groups():
             group.setup()
 
@@ -46,7 +47,7 @@ class Group(BaseGroup):
         if not tickets:
             for player in self.get_players():
                 tickets.append(player.id_in_group)
-        print(tickets)
+        # print(tickets)
         winning_id = random.choice(tickets)
         for player in self.get_players():
             player.is_winner = (player.id_in_group == winning_id)
